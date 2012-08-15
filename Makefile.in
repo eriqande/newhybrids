@@ -32,11 +32,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = newhybs$(EXEEXT)
+bin_PROGRAMS = newhybs$(EXEEXT) newhybsng$(EXEEXT)
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
-	ChangeLog INSTALL NEWS config.guess config.sub depcomp \
+	ChangeLog INSTALL NEWS compile config.guess config.sub depcomp \
 	install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_gl.m4 \
@@ -53,16 +53,33 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_newhybs_OBJECTS = GLUT_for_NewHybrids.$(OBJEXT) DataInput.$(OBJEXT) \
-	DataOutput.$(OBJEXT) NewHybrids.$(OBJEXT) \
-	RunWOG_func.$(OBJEXT) ECA_MemAlloc.$(OBJEXT) \
-	ECA_Opt3.$(OBJEXT) ECA_ReadData.$(OBJEXT) \
-	ECA_utilities.$(OBJEXT) MathStatRand.$(OBJEXT) \
-	MCTypesEtc.$(OBJEXT) GFMCMC.$(OBJEXT) \
-	GFMCMC_DrawingUtilities.$(OBJEXT) linpack.$(OBJEXT) \
-	com.$(OBJEXT) ranlib.$(OBJEXT)
+am_newhybs_OBJECTS = newhybs-GLUT_for_NewHybrids.$(OBJEXT) \
+	newhybs-DataInput.$(OBJEXT) newhybs-DataOutput.$(OBJEXT) \
+	newhybs-NewHybrids.$(OBJEXT) newhybs-RunWOG_func.$(OBJEXT) \
+	newhybs-ECA_MemAlloc.$(OBJEXT) newhybs-ECA_Opt3.$(OBJEXT) \
+	newhybs-ECA_ReadData.$(OBJEXT) newhybs-ECA_utilities.$(OBJEXT) \
+	newhybs-MathStatRand.$(OBJEXT) newhybs-MCTypesEtc.$(OBJEXT) \
+	newhybs-GFMCMC.$(OBJEXT) \
+	newhybs-GFMCMC_DrawingUtilities.$(OBJEXT) \
+	newhybs-linpack.$(OBJEXT) newhybs-com.$(OBJEXT) \
+	newhybs-ranlib.$(OBJEXT)
 newhybs_OBJECTS = $(am_newhybs_OBJECTS)
 newhybs_LDADD = $(LDADD)
+newhybs_LINK = $(CCLD) $(newhybs_CFLAGS) $(CFLAGS) $(newhybs_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am_newhybsng_OBJECTS = newhybsng-GLUT_for_NewHybrids.$(OBJEXT) \
+	newhybsng-DataInput.$(OBJEXT) newhybsng-DataOutput.$(OBJEXT) \
+	newhybsng-NewHybrids.$(OBJEXT) newhybsng-RunWOG_func.$(OBJEXT) \
+	newhybsng-ECA_MemAlloc.$(OBJEXT) newhybsng-ECA_Opt3.$(OBJEXT) \
+	newhybsng-ECA_ReadData.$(OBJEXT) \
+	newhybsng-ECA_utilities.$(OBJEXT) \
+	newhybsng-MathStatRand.$(OBJEXT) \
+	newhybsng-MCTypesEtc.$(OBJEXT) newhybsng-linpack.$(OBJEXT) \
+	newhybsng-com.$(OBJEXT) newhybsng-ranlib.$(OBJEXT)
+newhybsng_OBJECTS = $(am_newhybsng_OBJECTS)
+newhybsng_LDADD = $(LDADD)
+newhybsng_LINK = $(CCLD) $(newhybsng_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -70,8 +87,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(newhybs_SOURCES)
-DIST_SOURCES = $(newhybs_SOURCES)
+SOURCES = $(newhybs_SOURCES) $(newhybsng_SOURCES)
+DIST_SOURCES = $(newhybs_SOURCES) $(newhybsng_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -194,13 +211,19 @@ target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-AM_CFLAGS = $(GL_CFLAGS) $(GLU_CFLAGS) $(GLUT_CFLAGS) \
+newhybs_CFLAGS = $(GL_CFLAGS) $(GLU_CFLAGS) $(GLUT_CFLAGS) \
 	-I$(top_srcdir)/eca-shared/ecalibs \
 	-I$(top_srcdir)/src  \
 	-I$(top_srcdir)/eca-shared/ranlib/src  \
 	-I$(top_srcdir)/eca-shared/gfmcmc
 
-AM_LDFLAGS = $(GL_LIBS) $(GLU_LIBS) $(GLUT_LIBS)
+newhybsng_CFLAGS = -I$(top_srcdir)/eca-shared/ecalibs \
+	-I$(top_srcdir)/src  \
+	-I$(top_srcdir)/eca-shared/ranlib/src  \
+	-I$(top_srcdir)/eca-shared/gfmcmc \
+	-DCOMPILE_NEW_HYB_WITH_NO_GUI
+
+newhybs_LDFLAGS = $(GL_LIBS) $(GLU_LIBS) $(GLUT_LIBS)
 newhybs_SOURCES = $(top_srcdir)/src/GLUT_for_NewHybrids.c  \
 	$(top_srcdir)/src/DataInput.c  \
 	$(top_srcdir)/src/DataOutput.c  \
@@ -216,7 +239,22 @@ newhybs_SOURCES = $(top_srcdir)/src/GLUT_for_NewHybrids.c  \
 	$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c  \
 	$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c  \
 	$(top_srcdir)/eca-shared/ranlib/src/com.c  \
-	$(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+	$(top_srcdir)/eca-shared/ranlib/src/ranlib.c 
+
+newhybsng_SOURCES = $(top_srcdir)/src/GLUT_for_NewHybrids.c  \
+	$(top_srcdir)/src/DataInput.c  \
+	$(top_srcdir)/src/DataOutput.c  \
+	$(top_srcdir)/src/NewHybrids.c  \
+	$(top_srcdir)/src/RunWOG_func.c  \
+	$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c  \
+	$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c  \
+	$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c  \
+	$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c  \
+	$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c  \
+	$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c  \
+	$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c  \
+	$(top_srcdir)/eca-shared/ranlib/src/com.c  \
+	$(top_srcdir)/eca-shared/ranlib/src/ranlib.c 
 
 all: all-am
 
@@ -280,7 +318,10 @@ clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 newhybs$(EXEEXT): $(newhybs_OBJECTS) $(newhybs_DEPENDENCIES) 
 	@rm -f newhybs$(EXEEXT)
-	$(LINK) $(newhybs_OBJECTS) $(newhybs_LDADD) $(LIBS)
+	$(newhybs_LINK) $(newhybs_OBJECTS) $(newhybs_LDADD) $(LIBS)
+newhybsng$(EXEEXT): $(newhybsng_OBJECTS) $(newhybsng_DEPENDENCIES) 
+	@rm -f newhybsng$(EXEEXT)
+	$(newhybsng_LINK) $(newhybsng_OBJECTS) $(newhybsng_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -288,22 +329,36 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DataInput.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DataOutput.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ECA_MemAlloc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ECA_Opt3.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ECA_ReadData.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ECA_utilities.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GFMCMC.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GFMCMC_DrawingUtilities.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GLUT_for_NewHybrids.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MCTypesEtc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MathStatRand.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NewHybrids.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RunWOG_func.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/com.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linpack.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ranlib.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-DataInput.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-DataOutput.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-ECA_MemAlloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-ECA_Opt3.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-ECA_ReadData.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-ECA_utilities.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-GFMCMC.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-GFMCMC_DrawingUtilities.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-GLUT_for_NewHybrids.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-MCTypesEtc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-MathStatRand.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-NewHybrids.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-RunWOG_func.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-com.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-linpack.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybs-ranlib.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-DataInput.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-DataOutput.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-ECA_MemAlloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-ECA_Opt3.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-ECA_ReadData.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-ECA_utilities.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-GLUT_for_NewHybrids.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-MCTypesEtc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-MathStatRand.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-NewHybrids.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-RunWOG_func.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-com.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-linpack.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newhybsng-ranlib.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -319,229 +374,425 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
-GLUT_for_NewHybrids.o: $(top_srcdir)/src/GLUT_for_NewHybrids.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT GLUT_for_NewHybrids.o -MD -MP -MF $(DEPDIR)/GLUT_for_NewHybrids.Tpo -c -o GLUT_for_NewHybrids.o `test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/GLUT_for_NewHybrids.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/GLUT_for_NewHybrids.Tpo $(DEPDIR)/GLUT_for_NewHybrids.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/GLUT_for_NewHybrids.c' object='GLUT_for_NewHybrids.o' libtool=no @AMDEPBACKSLASH@
+newhybs-GLUT_for_NewHybrids.o: $(top_srcdir)/src/GLUT_for_NewHybrids.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-GLUT_for_NewHybrids.o -MD -MP -MF $(DEPDIR)/newhybs-GLUT_for_NewHybrids.Tpo -c -o newhybs-GLUT_for_NewHybrids.o `test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/GLUT_for_NewHybrids.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-GLUT_for_NewHybrids.Tpo $(DEPDIR)/newhybs-GLUT_for_NewHybrids.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/GLUT_for_NewHybrids.c' object='newhybs-GLUT_for_NewHybrids.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o GLUT_for_NewHybrids.o `test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/GLUT_for_NewHybrids.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-GLUT_for_NewHybrids.o `test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/GLUT_for_NewHybrids.c
 
-GLUT_for_NewHybrids.obj: $(top_srcdir)/src/GLUT_for_NewHybrids.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT GLUT_for_NewHybrids.obj -MD -MP -MF $(DEPDIR)/GLUT_for_NewHybrids.Tpo -c -o GLUT_for_NewHybrids.obj `if test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/GLUT_for_NewHybrids.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/GLUT_for_NewHybrids.Tpo $(DEPDIR)/GLUT_for_NewHybrids.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/GLUT_for_NewHybrids.c' object='GLUT_for_NewHybrids.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-GLUT_for_NewHybrids.obj: $(top_srcdir)/src/GLUT_for_NewHybrids.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-GLUT_for_NewHybrids.obj -MD -MP -MF $(DEPDIR)/newhybs-GLUT_for_NewHybrids.Tpo -c -o newhybs-GLUT_for_NewHybrids.obj `if test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/GLUT_for_NewHybrids.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-GLUT_for_NewHybrids.Tpo $(DEPDIR)/newhybs-GLUT_for_NewHybrids.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/GLUT_for_NewHybrids.c' object='newhybs-GLUT_for_NewHybrids.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o GLUT_for_NewHybrids.obj `if test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/GLUT_for_NewHybrids.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-GLUT_for_NewHybrids.obj `if test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/GLUT_for_NewHybrids.c'; fi`
 
-DataInput.o: $(top_srcdir)/src/DataInput.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT DataInput.o -MD -MP -MF $(DEPDIR)/DataInput.Tpo -c -o DataInput.o `test -f '$(top_srcdir)/src/DataInput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataInput.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/DataInput.Tpo $(DEPDIR)/DataInput.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataInput.c' object='DataInput.o' libtool=no @AMDEPBACKSLASH@
+newhybs-DataInput.o: $(top_srcdir)/src/DataInput.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-DataInput.o -MD -MP -MF $(DEPDIR)/newhybs-DataInput.Tpo -c -o newhybs-DataInput.o `test -f '$(top_srcdir)/src/DataInput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataInput.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-DataInput.Tpo $(DEPDIR)/newhybs-DataInput.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataInput.c' object='newhybs-DataInput.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o DataInput.o `test -f '$(top_srcdir)/src/DataInput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataInput.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-DataInput.o `test -f '$(top_srcdir)/src/DataInput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataInput.c
 
-DataInput.obj: $(top_srcdir)/src/DataInput.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT DataInput.obj -MD -MP -MF $(DEPDIR)/DataInput.Tpo -c -o DataInput.obj `if test -f '$(top_srcdir)/src/DataInput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataInput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataInput.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/DataInput.Tpo $(DEPDIR)/DataInput.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataInput.c' object='DataInput.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-DataInput.obj: $(top_srcdir)/src/DataInput.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-DataInput.obj -MD -MP -MF $(DEPDIR)/newhybs-DataInput.Tpo -c -o newhybs-DataInput.obj `if test -f '$(top_srcdir)/src/DataInput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataInput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataInput.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-DataInput.Tpo $(DEPDIR)/newhybs-DataInput.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataInput.c' object='newhybs-DataInput.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o DataInput.obj `if test -f '$(top_srcdir)/src/DataInput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataInput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataInput.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-DataInput.obj `if test -f '$(top_srcdir)/src/DataInput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataInput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataInput.c'; fi`
 
-DataOutput.o: $(top_srcdir)/src/DataOutput.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT DataOutput.o -MD -MP -MF $(DEPDIR)/DataOutput.Tpo -c -o DataOutput.o `test -f '$(top_srcdir)/src/DataOutput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataOutput.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/DataOutput.Tpo $(DEPDIR)/DataOutput.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataOutput.c' object='DataOutput.o' libtool=no @AMDEPBACKSLASH@
+newhybs-DataOutput.o: $(top_srcdir)/src/DataOutput.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-DataOutput.o -MD -MP -MF $(DEPDIR)/newhybs-DataOutput.Tpo -c -o newhybs-DataOutput.o `test -f '$(top_srcdir)/src/DataOutput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataOutput.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-DataOutput.Tpo $(DEPDIR)/newhybs-DataOutput.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataOutput.c' object='newhybs-DataOutput.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o DataOutput.o `test -f '$(top_srcdir)/src/DataOutput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataOutput.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-DataOutput.o `test -f '$(top_srcdir)/src/DataOutput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataOutput.c
 
-DataOutput.obj: $(top_srcdir)/src/DataOutput.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT DataOutput.obj -MD -MP -MF $(DEPDIR)/DataOutput.Tpo -c -o DataOutput.obj `if test -f '$(top_srcdir)/src/DataOutput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataOutput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataOutput.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/DataOutput.Tpo $(DEPDIR)/DataOutput.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataOutput.c' object='DataOutput.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-DataOutput.obj: $(top_srcdir)/src/DataOutput.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-DataOutput.obj -MD -MP -MF $(DEPDIR)/newhybs-DataOutput.Tpo -c -o newhybs-DataOutput.obj `if test -f '$(top_srcdir)/src/DataOutput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataOutput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataOutput.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-DataOutput.Tpo $(DEPDIR)/newhybs-DataOutput.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataOutput.c' object='newhybs-DataOutput.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o DataOutput.obj `if test -f '$(top_srcdir)/src/DataOutput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataOutput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataOutput.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-DataOutput.obj `if test -f '$(top_srcdir)/src/DataOutput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataOutput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataOutput.c'; fi`
 
-NewHybrids.o: $(top_srcdir)/src/NewHybrids.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT NewHybrids.o -MD -MP -MF $(DEPDIR)/NewHybrids.Tpo -c -o NewHybrids.o `test -f '$(top_srcdir)/src/NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/NewHybrids.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/NewHybrids.Tpo $(DEPDIR)/NewHybrids.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/NewHybrids.c' object='NewHybrids.o' libtool=no @AMDEPBACKSLASH@
+newhybs-NewHybrids.o: $(top_srcdir)/src/NewHybrids.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-NewHybrids.o -MD -MP -MF $(DEPDIR)/newhybs-NewHybrids.Tpo -c -o newhybs-NewHybrids.o `test -f '$(top_srcdir)/src/NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/NewHybrids.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-NewHybrids.Tpo $(DEPDIR)/newhybs-NewHybrids.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/NewHybrids.c' object='newhybs-NewHybrids.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o NewHybrids.o `test -f '$(top_srcdir)/src/NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/NewHybrids.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-NewHybrids.o `test -f '$(top_srcdir)/src/NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/NewHybrids.c
 
-NewHybrids.obj: $(top_srcdir)/src/NewHybrids.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT NewHybrids.obj -MD -MP -MF $(DEPDIR)/NewHybrids.Tpo -c -o NewHybrids.obj `if test -f '$(top_srcdir)/src/NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/NewHybrids.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/NewHybrids.Tpo $(DEPDIR)/NewHybrids.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/NewHybrids.c' object='NewHybrids.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-NewHybrids.obj: $(top_srcdir)/src/NewHybrids.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-NewHybrids.obj -MD -MP -MF $(DEPDIR)/newhybs-NewHybrids.Tpo -c -o newhybs-NewHybrids.obj `if test -f '$(top_srcdir)/src/NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/NewHybrids.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-NewHybrids.Tpo $(DEPDIR)/newhybs-NewHybrids.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/NewHybrids.c' object='newhybs-NewHybrids.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o NewHybrids.obj `if test -f '$(top_srcdir)/src/NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/NewHybrids.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-NewHybrids.obj `if test -f '$(top_srcdir)/src/NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/NewHybrids.c'; fi`
 
-RunWOG_func.o: $(top_srcdir)/src/RunWOG_func.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT RunWOG_func.o -MD -MP -MF $(DEPDIR)/RunWOG_func.Tpo -c -o RunWOG_func.o `test -f '$(top_srcdir)/src/RunWOG_func.c' || echo '$(srcdir)/'`$(top_srcdir)/src/RunWOG_func.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/RunWOG_func.Tpo $(DEPDIR)/RunWOG_func.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/RunWOG_func.c' object='RunWOG_func.o' libtool=no @AMDEPBACKSLASH@
+newhybs-RunWOG_func.o: $(top_srcdir)/src/RunWOG_func.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-RunWOG_func.o -MD -MP -MF $(DEPDIR)/newhybs-RunWOG_func.Tpo -c -o newhybs-RunWOG_func.o `test -f '$(top_srcdir)/src/RunWOG_func.c' || echo '$(srcdir)/'`$(top_srcdir)/src/RunWOG_func.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-RunWOG_func.Tpo $(DEPDIR)/newhybs-RunWOG_func.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/RunWOG_func.c' object='newhybs-RunWOG_func.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o RunWOG_func.o `test -f '$(top_srcdir)/src/RunWOG_func.c' || echo '$(srcdir)/'`$(top_srcdir)/src/RunWOG_func.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-RunWOG_func.o `test -f '$(top_srcdir)/src/RunWOG_func.c' || echo '$(srcdir)/'`$(top_srcdir)/src/RunWOG_func.c
 
-RunWOG_func.obj: $(top_srcdir)/src/RunWOG_func.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT RunWOG_func.obj -MD -MP -MF $(DEPDIR)/RunWOG_func.Tpo -c -o RunWOG_func.obj `if test -f '$(top_srcdir)/src/RunWOG_func.c'; then $(CYGPATH_W) '$(top_srcdir)/src/RunWOG_func.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/RunWOG_func.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/RunWOG_func.Tpo $(DEPDIR)/RunWOG_func.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/RunWOG_func.c' object='RunWOG_func.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-RunWOG_func.obj: $(top_srcdir)/src/RunWOG_func.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-RunWOG_func.obj -MD -MP -MF $(DEPDIR)/newhybs-RunWOG_func.Tpo -c -o newhybs-RunWOG_func.obj `if test -f '$(top_srcdir)/src/RunWOG_func.c'; then $(CYGPATH_W) '$(top_srcdir)/src/RunWOG_func.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/RunWOG_func.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-RunWOG_func.Tpo $(DEPDIR)/newhybs-RunWOG_func.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/RunWOG_func.c' object='newhybs-RunWOG_func.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o RunWOG_func.obj `if test -f '$(top_srcdir)/src/RunWOG_func.c'; then $(CYGPATH_W) '$(top_srcdir)/src/RunWOG_func.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/RunWOG_func.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-RunWOG_func.obj `if test -f '$(top_srcdir)/src/RunWOG_func.c'; then $(CYGPATH_W) '$(top_srcdir)/src/RunWOG_func.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/RunWOG_func.c'; fi`
 
-ECA_MemAlloc.o: $(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ECA_MemAlloc.o -MD -MP -MF $(DEPDIR)/ECA_MemAlloc.Tpo -c -o ECA_MemAlloc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ECA_MemAlloc.Tpo $(DEPDIR)/ECA_MemAlloc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' object='ECA_MemAlloc.o' libtool=no @AMDEPBACKSLASH@
+newhybs-ECA_MemAlloc.o: $(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ECA_MemAlloc.o -MD -MP -MF $(DEPDIR)/newhybs-ECA_MemAlloc.Tpo -c -o newhybs-ECA_MemAlloc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ECA_MemAlloc.Tpo $(DEPDIR)/newhybs-ECA_MemAlloc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' object='newhybs-ECA_MemAlloc.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ECA_MemAlloc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ECA_MemAlloc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
 
-ECA_MemAlloc.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ECA_MemAlloc.obj -MD -MP -MF $(DEPDIR)/ECA_MemAlloc.Tpo -c -o ECA_MemAlloc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ECA_MemAlloc.Tpo $(DEPDIR)/ECA_MemAlloc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' object='ECA_MemAlloc.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-ECA_MemAlloc.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ECA_MemAlloc.obj -MD -MP -MF $(DEPDIR)/newhybs-ECA_MemAlloc.Tpo -c -o newhybs-ECA_MemAlloc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ECA_MemAlloc.Tpo $(DEPDIR)/newhybs-ECA_MemAlloc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' object='newhybs-ECA_MemAlloc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ECA_MemAlloc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ECA_MemAlloc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; fi`
 
-ECA_Opt3.o: $(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ECA_Opt3.o -MD -MP -MF $(DEPDIR)/ECA_Opt3.Tpo -c -o ECA_Opt3.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ECA_Opt3.Tpo $(DEPDIR)/ECA_Opt3.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' object='ECA_Opt3.o' libtool=no @AMDEPBACKSLASH@
+newhybs-ECA_Opt3.o: $(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ECA_Opt3.o -MD -MP -MF $(DEPDIR)/newhybs-ECA_Opt3.Tpo -c -o newhybs-ECA_Opt3.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ECA_Opt3.Tpo $(DEPDIR)/newhybs-ECA_Opt3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' object='newhybs-ECA_Opt3.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ECA_Opt3.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ECA_Opt3.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
 
-ECA_Opt3.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ECA_Opt3.obj -MD -MP -MF $(DEPDIR)/ECA_Opt3.Tpo -c -o ECA_Opt3.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ECA_Opt3.Tpo $(DEPDIR)/ECA_Opt3.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' object='ECA_Opt3.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-ECA_Opt3.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ECA_Opt3.obj -MD -MP -MF $(DEPDIR)/newhybs-ECA_Opt3.Tpo -c -o newhybs-ECA_Opt3.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ECA_Opt3.Tpo $(DEPDIR)/newhybs-ECA_Opt3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' object='newhybs-ECA_Opt3.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ECA_Opt3.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ECA_Opt3.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; fi`
 
-ECA_ReadData.o: $(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ECA_ReadData.o -MD -MP -MF $(DEPDIR)/ECA_ReadData.Tpo -c -o ECA_ReadData.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ECA_ReadData.Tpo $(DEPDIR)/ECA_ReadData.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' object='ECA_ReadData.o' libtool=no @AMDEPBACKSLASH@
+newhybs-ECA_ReadData.o: $(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ECA_ReadData.o -MD -MP -MF $(DEPDIR)/newhybs-ECA_ReadData.Tpo -c -o newhybs-ECA_ReadData.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ECA_ReadData.Tpo $(DEPDIR)/newhybs-ECA_ReadData.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' object='newhybs-ECA_ReadData.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ECA_ReadData.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ECA_ReadData.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
 
-ECA_ReadData.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ECA_ReadData.obj -MD -MP -MF $(DEPDIR)/ECA_ReadData.Tpo -c -o ECA_ReadData.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ECA_ReadData.Tpo $(DEPDIR)/ECA_ReadData.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' object='ECA_ReadData.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-ECA_ReadData.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ECA_ReadData.obj -MD -MP -MF $(DEPDIR)/newhybs-ECA_ReadData.Tpo -c -o newhybs-ECA_ReadData.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ECA_ReadData.Tpo $(DEPDIR)/newhybs-ECA_ReadData.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' object='newhybs-ECA_ReadData.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ECA_ReadData.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ECA_ReadData.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; fi`
 
-ECA_utilities.o: $(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ECA_utilities.o -MD -MP -MF $(DEPDIR)/ECA_utilities.Tpo -c -o ECA_utilities.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ECA_utilities.Tpo $(DEPDIR)/ECA_utilities.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' object='ECA_utilities.o' libtool=no @AMDEPBACKSLASH@
+newhybs-ECA_utilities.o: $(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ECA_utilities.o -MD -MP -MF $(DEPDIR)/newhybs-ECA_utilities.Tpo -c -o newhybs-ECA_utilities.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ECA_utilities.Tpo $(DEPDIR)/newhybs-ECA_utilities.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' object='newhybs-ECA_utilities.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ECA_utilities.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ECA_utilities.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
 
-ECA_utilities.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ECA_utilities.obj -MD -MP -MF $(DEPDIR)/ECA_utilities.Tpo -c -o ECA_utilities.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ECA_utilities.Tpo $(DEPDIR)/ECA_utilities.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' object='ECA_utilities.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-ECA_utilities.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ECA_utilities.obj -MD -MP -MF $(DEPDIR)/newhybs-ECA_utilities.Tpo -c -o newhybs-ECA_utilities.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ECA_utilities.Tpo $(DEPDIR)/newhybs-ECA_utilities.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' object='newhybs-ECA_utilities.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ECA_utilities.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ECA_utilities.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; fi`
 
-MathStatRand.o: $(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT MathStatRand.o -MD -MP -MF $(DEPDIR)/MathStatRand.Tpo -c -o MathStatRand.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/MathStatRand.Tpo $(DEPDIR)/MathStatRand.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' object='MathStatRand.o' libtool=no @AMDEPBACKSLASH@
+newhybs-MathStatRand.o: $(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-MathStatRand.o -MD -MP -MF $(DEPDIR)/newhybs-MathStatRand.Tpo -c -o newhybs-MathStatRand.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-MathStatRand.Tpo $(DEPDIR)/newhybs-MathStatRand.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' object='newhybs-MathStatRand.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o MathStatRand.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-MathStatRand.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
 
-MathStatRand.obj: $(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT MathStatRand.obj -MD -MP -MF $(DEPDIR)/MathStatRand.Tpo -c -o MathStatRand.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/MathStatRand.Tpo $(DEPDIR)/MathStatRand.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' object='MathStatRand.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-MathStatRand.obj: $(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-MathStatRand.obj -MD -MP -MF $(DEPDIR)/newhybs-MathStatRand.Tpo -c -o newhybs-MathStatRand.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-MathStatRand.Tpo $(DEPDIR)/newhybs-MathStatRand.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' object='newhybs-MathStatRand.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o MathStatRand.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-MathStatRand.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; fi`
 
-MCTypesEtc.o: $(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT MCTypesEtc.o -MD -MP -MF $(DEPDIR)/MCTypesEtc.Tpo -c -o MCTypesEtc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/MCTypesEtc.Tpo $(DEPDIR)/MCTypesEtc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' object='MCTypesEtc.o' libtool=no @AMDEPBACKSLASH@
+newhybs-MCTypesEtc.o: $(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-MCTypesEtc.o -MD -MP -MF $(DEPDIR)/newhybs-MCTypesEtc.Tpo -c -o newhybs-MCTypesEtc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-MCTypesEtc.Tpo $(DEPDIR)/newhybs-MCTypesEtc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' object='newhybs-MCTypesEtc.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o MCTypesEtc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-MCTypesEtc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
 
-MCTypesEtc.obj: $(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT MCTypesEtc.obj -MD -MP -MF $(DEPDIR)/MCTypesEtc.Tpo -c -o MCTypesEtc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/MCTypesEtc.Tpo $(DEPDIR)/MCTypesEtc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' object='MCTypesEtc.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-MCTypesEtc.obj: $(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-MCTypesEtc.obj -MD -MP -MF $(DEPDIR)/newhybs-MCTypesEtc.Tpo -c -o newhybs-MCTypesEtc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-MCTypesEtc.Tpo $(DEPDIR)/newhybs-MCTypesEtc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' object='newhybs-MCTypesEtc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o MCTypesEtc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-MCTypesEtc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; fi`
 
-GFMCMC.o: $(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT GFMCMC.o -MD -MP -MF $(DEPDIR)/GFMCMC.Tpo -c -o GFMCMC.o `test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/GFMCMC.Tpo $(DEPDIR)/GFMCMC.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c' object='GFMCMC.o' libtool=no @AMDEPBACKSLASH@
+newhybs-GFMCMC.o: $(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-GFMCMC.o -MD -MP -MF $(DEPDIR)/newhybs-GFMCMC.Tpo -c -o newhybs-GFMCMC.o `test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-GFMCMC.Tpo $(DEPDIR)/newhybs-GFMCMC.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c' object='newhybs-GFMCMC.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o GFMCMC.o `test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-GFMCMC.o `test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c
 
-GFMCMC.obj: $(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT GFMCMC.obj -MD -MP -MF $(DEPDIR)/GFMCMC.Tpo -c -o GFMCMC.obj `if test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/GFMCMC.Tpo $(DEPDIR)/GFMCMC.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c' object='GFMCMC.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-GFMCMC.obj: $(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-GFMCMC.obj -MD -MP -MF $(DEPDIR)/newhybs-GFMCMC.Tpo -c -o newhybs-GFMCMC.obj `if test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-GFMCMC.Tpo $(DEPDIR)/newhybs-GFMCMC.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c' object='newhybs-GFMCMC.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o GFMCMC.obj `if test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-GFMCMC.obj `if test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/gfmcmc/GFMCMC.c'; fi`
 
-GFMCMC_DrawingUtilities.o: $(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT GFMCMC_DrawingUtilities.o -MD -MP -MF $(DEPDIR)/GFMCMC_DrawingUtilities.Tpo -c -o GFMCMC_DrawingUtilities.o `test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/GFMCMC_DrawingUtilities.Tpo $(DEPDIR)/GFMCMC_DrawingUtilities.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c' object='GFMCMC_DrawingUtilities.o' libtool=no @AMDEPBACKSLASH@
+newhybs-GFMCMC_DrawingUtilities.o: $(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-GFMCMC_DrawingUtilities.o -MD -MP -MF $(DEPDIR)/newhybs-GFMCMC_DrawingUtilities.Tpo -c -o newhybs-GFMCMC_DrawingUtilities.o `test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-GFMCMC_DrawingUtilities.Tpo $(DEPDIR)/newhybs-GFMCMC_DrawingUtilities.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c' object='newhybs-GFMCMC_DrawingUtilities.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o GFMCMC_DrawingUtilities.o `test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-GFMCMC_DrawingUtilities.o `test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c
 
-GFMCMC_DrawingUtilities.obj: $(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT GFMCMC_DrawingUtilities.obj -MD -MP -MF $(DEPDIR)/GFMCMC_DrawingUtilities.Tpo -c -o GFMCMC_DrawingUtilities.obj `if test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/GFMCMC_DrawingUtilities.Tpo $(DEPDIR)/GFMCMC_DrawingUtilities.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c' object='GFMCMC_DrawingUtilities.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-GFMCMC_DrawingUtilities.obj: $(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-GFMCMC_DrawingUtilities.obj -MD -MP -MF $(DEPDIR)/newhybs-GFMCMC_DrawingUtilities.Tpo -c -o newhybs-GFMCMC_DrawingUtilities.obj `if test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-GFMCMC_DrawingUtilities.Tpo $(DEPDIR)/newhybs-GFMCMC_DrawingUtilities.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c' object='newhybs-GFMCMC_DrawingUtilities.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o GFMCMC_DrawingUtilities.obj `if test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-GFMCMC_DrawingUtilities.obj `if test -f '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/gfmcmc/GFMCMC_DrawingUtilities.c'; fi`
 
-linpack.o: $(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT linpack.o -MD -MP -MF $(DEPDIR)/linpack.Tpo -c -o linpack.o `test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/linpack.Tpo $(DEPDIR)/linpack.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' object='linpack.o' libtool=no @AMDEPBACKSLASH@
+newhybs-linpack.o: $(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-linpack.o -MD -MP -MF $(DEPDIR)/newhybs-linpack.Tpo -c -o newhybs-linpack.o `test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-linpack.Tpo $(DEPDIR)/newhybs-linpack.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' object='newhybs-linpack.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o linpack.o `test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-linpack.o `test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
 
-linpack.obj: $(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT linpack.obj -MD -MP -MF $(DEPDIR)/linpack.Tpo -c -o linpack.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/linpack.Tpo $(DEPDIR)/linpack.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' object='linpack.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-linpack.obj: $(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-linpack.obj -MD -MP -MF $(DEPDIR)/newhybs-linpack.Tpo -c -o newhybs-linpack.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-linpack.Tpo $(DEPDIR)/newhybs-linpack.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' object='newhybs-linpack.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o linpack.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-linpack.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; fi`
 
-com.o: $(top_srcdir)/eca-shared/ranlib/src/com.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT com.o -MD -MP -MF $(DEPDIR)/com.Tpo -c -o com.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/com.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/com.Tpo $(DEPDIR)/com.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/com.c' object='com.o' libtool=no @AMDEPBACKSLASH@
+newhybs-com.o: $(top_srcdir)/eca-shared/ranlib/src/com.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-com.o -MD -MP -MF $(DEPDIR)/newhybs-com.Tpo -c -o newhybs-com.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/com.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-com.Tpo $(DEPDIR)/newhybs-com.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/com.c' object='newhybs-com.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o com.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/com.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-com.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/com.c
 
-com.obj: $(top_srcdir)/eca-shared/ranlib/src/com.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT com.obj -MD -MP -MF $(DEPDIR)/com.Tpo -c -o com.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/com.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/com.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/com.Tpo $(DEPDIR)/com.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/com.c' object='com.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-com.obj: $(top_srcdir)/eca-shared/ranlib/src/com.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-com.obj -MD -MP -MF $(DEPDIR)/newhybs-com.Tpo -c -o newhybs-com.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/com.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/com.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-com.Tpo $(DEPDIR)/newhybs-com.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/com.c' object='newhybs-com.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o com.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/com.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/com.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-com.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/com.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/com.c'; fi`
 
-ranlib.o: $(top_srcdir)/eca-shared/ranlib/src/ranlib.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ranlib.o -MD -MP -MF $(DEPDIR)/ranlib.Tpo -c -o ranlib.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/ranlib.c
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ranlib.Tpo $(DEPDIR)/ranlib.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' object='ranlib.o' libtool=no @AMDEPBACKSLASH@
+newhybs-ranlib.o: $(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ranlib.o -MD -MP -MF $(DEPDIR)/newhybs-ranlib.Tpo -c -o newhybs-ranlib.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ranlib.Tpo $(DEPDIR)/newhybs-ranlib.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' object='newhybs-ranlib.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ranlib.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ranlib.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/ranlib.c
 
-ranlib.obj: $(top_srcdir)/eca-shared/ranlib/src/ranlib.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ranlib.obj -MD -MP -MF $(DEPDIR)/ranlib.Tpo -c -o ranlib.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; fi`
-@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/ranlib.Tpo $(DEPDIR)/ranlib.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' object='ranlib.obj' libtool=no @AMDEPBACKSLASH@
+newhybs-ranlib.obj: $(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -MT newhybs-ranlib.obj -MD -MP -MF $(DEPDIR)/newhybs-ranlib.Tpo -c -o newhybs-ranlib.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybs-ranlib.Tpo $(DEPDIR)/newhybs-ranlib.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' object='newhybs-ranlib.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ranlib.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybs_CFLAGS) $(CFLAGS) -c -o newhybs-ranlib.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; fi`
+
+newhybsng-GLUT_for_NewHybrids.o: $(top_srcdir)/src/GLUT_for_NewHybrids.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-GLUT_for_NewHybrids.o -MD -MP -MF $(DEPDIR)/newhybsng-GLUT_for_NewHybrids.Tpo -c -o newhybsng-GLUT_for_NewHybrids.o `test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/GLUT_for_NewHybrids.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-GLUT_for_NewHybrids.Tpo $(DEPDIR)/newhybsng-GLUT_for_NewHybrids.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/GLUT_for_NewHybrids.c' object='newhybsng-GLUT_for_NewHybrids.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-GLUT_for_NewHybrids.o `test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/GLUT_for_NewHybrids.c
+
+newhybsng-GLUT_for_NewHybrids.obj: $(top_srcdir)/src/GLUT_for_NewHybrids.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-GLUT_for_NewHybrids.obj -MD -MP -MF $(DEPDIR)/newhybsng-GLUT_for_NewHybrids.Tpo -c -o newhybsng-GLUT_for_NewHybrids.obj `if test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/GLUT_for_NewHybrids.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-GLUT_for_NewHybrids.Tpo $(DEPDIR)/newhybsng-GLUT_for_NewHybrids.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/GLUT_for_NewHybrids.c' object='newhybsng-GLUT_for_NewHybrids.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-GLUT_for_NewHybrids.obj `if test -f '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/GLUT_for_NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/GLUT_for_NewHybrids.c'; fi`
+
+newhybsng-DataInput.o: $(top_srcdir)/src/DataInput.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-DataInput.o -MD -MP -MF $(DEPDIR)/newhybsng-DataInput.Tpo -c -o newhybsng-DataInput.o `test -f '$(top_srcdir)/src/DataInput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataInput.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-DataInput.Tpo $(DEPDIR)/newhybsng-DataInput.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataInput.c' object='newhybsng-DataInput.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-DataInput.o `test -f '$(top_srcdir)/src/DataInput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataInput.c
+
+newhybsng-DataInput.obj: $(top_srcdir)/src/DataInput.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-DataInput.obj -MD -MP -MF $(DEPDIR)/newhybsng-DataInput.Tpo -c -o newhybsng-DataInput.obj `if test -f '$(top_srcdir)/src/DataInput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataInput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataInput.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-DataInput.Tpo $(DEPDIR)/newhybsng-DataInput.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataInput.c' object='newhybsng-DataInput.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-DataInput.obj `if test -f '$(top_srcdir)/src/DataInput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataInput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataInput.c'; fi`
+
+newhybsng-DataOutput.o: $(top_srcdir)/src/DataOutput.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-DataOutput.o -MD -MP -MF $(DEPDIR)/newhybsng-DataOutput.Tpo -c -o newhybsng-DataOutput.o `test -f '$(top_srcdir)/src/DataOutput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataOutput.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-DataOutput.Tpo $(DEPDIR)/newhybsng-DataOutput.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataOutput.c' object='newhybsng-DataOutput.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-DataOutput.o `test -f '$(top_srcdir)/src/DataOutput.c' || echo '$(srcdir)/'`$(top_srcdir)/src/DataOutput.c
+
+newhybsng-DataOutput.obj: $(top_srcdir)/src/DataOutput.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-DataOutput.obj -MD -MP -MF $(DEPDIR)/newhybsng-DataOutput.Tpo -c -o newhybsng-DataOutput.obj `if test -f '$(top_srcdir)/src/DataOutput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataOutput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataOutput.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-DataOutput.Tpo $(DEPDIR)/newhybsng-DataOutput.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/DataOutput.c' object='newhybsng-DataOutput.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-DataOutput.obj `if test -f '$(top_srcdir)/src/DataOutput.c'; then $(CYGPATH_W) '$(top_srcdir)/src/DataOutput.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/DataOutput.c'; fi`
+
+newhybsng-NewHybrids.o: $(top_srcdir)/src/NewHybrids.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-NewHybrids.o -MD -MP -MF $(DEPDIR)/newhybsng-NewHybrids.Tpo -c -o newhybsng-NewHybrids.o `test -f '$(top_srcdir)/src/NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/NewHybrids.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-NewHybrids.Tpo $(DEPDIR)/newhybsng-NewHybrids.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/NewHybrids.c' object='newhybsng-NewHybrids.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-NewHybrids.o `test -f '$(top_srcdir)/src/NewHybrids.c' || echo '$(srcdir)/'`$(top_srcdir)/src/NewHybrids.c
+
+newhybsng-NewHybrids.obj: $(top_srcdir)/src/NewHybrids.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-NewHybrids.obj -MD -MP -MF $(DEPDIR)/newhybsng-NewHybrids.Tpo -c -o newhybsng-NewHybrids.obj `if test -f '$(top_srcdir)/src/NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/NewHybrids.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-NewHybrids.Tpo $(DEPDIR)/newhybsng-NewHybrids.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/NewHybrids.c' object='newhybsng-NewHybrids.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-NewHybrids.obj `if test -f '$(top_srcdir)/src/NewHybrids.c'; then $(CYGPATH_W) '$(top_srcdir)/src/NewHybrids.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/NewHybrids.c'; fi`
+
+newhybsng-RunWOG_func.o: $(top_srcdir)/src/RunWOG_func.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-RunWOG_func.o -MD -MP -MF $(DEPDIR)/newhybsng-RunWOG_func.Tpo -c -o newhybsng-RunWOG_func.o `test -f '$(top_srcdir)/src/RunWOG_func.c' || echo '$(srcdir)/'`$(top_srcdir)/src/RunWOG_func.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-RunWOG_func.Tpo $(DEPDIR)/newhybsng-RunWOG_func.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/RunWOG_func.c' object='newhybsng-RunWOG_func.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-RunWOG_func.o `test -f '$(top_srcdir)/src/RunWOG_func.c' || echo '$(srcdir)/'`$(top_srcdir)/src/RunWOG_func.c
+
+newhybsng-RunWOG_func.obj: $(top_srcdir)/src/RunWOG_func.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-RunWOG_func.obj -MD -MP -MF $(DEPDIR)/newhybsng-RunWOG_func.Tpo -c -o newhybsng-RunWOG_func.obj `if test -f '$(top_srcdir)/src/RunWOG_func.c'; then $(CYGPATH_W) '$(top_srcdir)/src/RunWOG_func.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/RunWOG_func.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-RunWOG_func.Tpo $(DEPDIR)/newhybsng-RunWOG_func.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/RunWOG_func.c' object='newhybsng-RunWOG_func.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-RunWOG_func.obj `if test -f '$(top_srcdir)/src/RunWOG_func.c'; then $(CYGPATH_W) '$(top_srcdir)/src/RunWOG_func.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/RunWOG_func.c'; fi`
+
+newhybsng-ECA_MemAlloc.o: $(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ECA_MemAlloc.o -MD -MP -MF $(DEPDIR)/newhybsng-ECA_MemAlloc.Tpo -c -o newhybsng-ECA_MemAlloc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ECA_MemAlloc.Tpo $(DEPDIR)/newhybsng-ECA_MemAlloc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' object='newhybsng-ECA_MemAlloc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ECA_MemAlloc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
+
+newhybsng-ECA_MemAlloc.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ECA_MemAlloc.obj -MD -MP -MF $(DEPDIR)/newhybsng-ECA_MemAlloc.Tpo -c -o newhybsng-ECA_MemAlloc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ECA_MemAlloc.Tpo $(DEPDIR)/newhybsng-ECA_MemAlloc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c' object='newhybsng-ECA_MemAlloc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ECA_MemAlloc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_MemAlloc.c'; fi`
+
+newhybsng-ECA_Opt3.o: $(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ECA_Opt3.o -MD -MP -MF $(DEPDIR)/newhybsng-ECA_Opt3.Tpo -c -o newhybsng-ECA_Opt3.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ECA_Opt3.Tpo $(DEPDIR)/newhybsng-ECA_Opt3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' object='newhybsng-ECA_Opt3.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ECA_Opt3.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
+
+newhybsng-ECA_Opt3.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ECA_Opt3.obj -MD -MP -MF $(DEPDIR)/newhybsng-ECA_Opt3.Tpo -c -o newhybsng-ECA_Opt3.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ECA_Opt3.Tpo $(DEPDIR)/newhybsng-ECA_Opt3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c' object='newhybsng-ECA_Opt3.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ECA_Opt3.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_Opt3.c'; fi`
+
+newhybsng-ECA_ReadData.o: $(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ECA_ReadData.o -MD -MP -MF $(DEPDIR)/newhybsng-ECA_ReadData.Tpo -c -o newhybsng-ECA_ReadData.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ECA_ReadData.Tpo $(DEPDIR)/newhybsng-ECA_ReadData.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' object='newhybsng-ECA_ReadData.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ECA_ReadData.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
+
+newhybsng-ECA_ReadData.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ECA_ReadData.obj -MD -MP -MF $(DEPDIR)/newhybsng-ECA_ReadData.Tpo -c -o newhybsng-ECA_ReadData.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ECA_ReadData.Tpo $(DEPDIR)/newhybsng-ECA_ReadData.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c' object='newhybsng-ECA_ReadData.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ECA_ReadData.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_ReadData.c'; fi`
+
+newhybsng-ECA_utilities.o: $(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ECA_utilities.o -MD -MP -MF $(DEPDIR)/newhybsng-ECA_utilities.Tpo -c -o newhybsng-ECA_utilities.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ECA_utilities.Tpo $(DEPDIR)/newhybsng-ECA_utilities.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' object='newhybsng-ECA_utilities.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ECA_utilities.o `test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
+
+newhybsng-ECA_utilities.obj: $(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ECA_utilities.obj -MD -MP -MF $(DEPDIR)/newhybsng-ECA_utilities.Tpo -c -o newhybsng-ECA_utilities.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ECA_utilities.Tpo $(DEPDIR)/newhybsng-ECA_utilities.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c' object='newhybsng-ECA_utilities.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ECA_utilities.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/ECA_utilities.c'; fi`
+
+newhybsng-MathStatRand.o: $(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-MathStatRand.o -MD -MP -MF $(DEPDIR)/newhybsng-MathStatRand.Tpo -c -o newhybsng-MathStatRand.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-MathStatRand.Tpo $(DEPDIR)/newhybsng-MathStatRand.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' object='newhybsng-MathStatRand.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-MathStatRand.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
+
+newhybsng-MathStatRand.obj: $(top_srcdir)/eca-shared/ecalibs/MathStatRand.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-MathStatRand.obj -MD -MP -MF $(DEPDIR)/newhybsng-MathStatRand.Tpo -c -o newhybsng-MathStatRand.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-MathStatRand.Tpo $(DEPDIR)/newhybsng-MathStatRand.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c' object='newhybsng-MathStatRand.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-MathStatRand.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MathStatRand.c'; fi`
+
+newhybsng-MCTypesEtc.o: $(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-MCTypesEtc.o -MD -MP -MF $(DEPDIR)/newhybsng-MCTypesEtc.Tpo -c -o newhybsng-MCTypesEtc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-MCTypesEtc.Tpo $(DEPDIR)/newhybsng-MCTypesEtc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' object='newhybsng-MCTypesEtc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-MCTypesEtc.o `test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
+
+newhybsng-MCTypesEtc.obj: $(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-MCTypesEtc.obj -MD -MP -MF $(DEPDIR)/newhybsng-MCTypesEtc.Tpo -c -o newhybsng-MCTypesEtc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-MCTypesEtc.Tpo $(DEPDIR)/newhybsng-MCTypesEtc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c' object='newhybsng-MCTypesEtc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-MCTypesEtc.obj `if test -f '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ecalibs/MCTypesEtc.c'; fi`
+
+newhybsng-linpack.o: $(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-linpack.o -MD -MP -MF $(DEPDIR)/newhybsng-linpack.Tpo -c -o newhybsng-linpack.o `test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-linpack.Tpo $(DEPDIR)/newhybsng-linpack.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' object='newhybsng-linpack.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-linpack.o `test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
+
+newhybsng-linpack.obj: $(top_srcdir)/eca-shared/ranlib/linpack/linpack.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-linpack.obj -MD -MP -MF $(DEPDIR)/newhybsng-linpack.Tpo -c -o newhybsng-linpack.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-linpack.Tpo $(DEPDIR)/newhybsng-linpack.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c' object='newhybsng-linpack.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-linpack.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/linpack/linpack.c'; fi`
+
+newhybsng-com.o: $(top_srcdir)/eca-shared/ranlib/src/com.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-com.o -MD -MP -MF $(DEPDIR)/newhybsng-com.Tpo -c -o newhybsng-com.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/com.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-com.Tpo $(DEPDIR)/newhybsng-com.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/com.c' object='newhybsng-com.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-com.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/com.c
+
+newhybsng-com.obj: $(top_srcdir)/eca-shared/ranlib/src/com.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-com.obj -MD -MP -MF $(DEPDIR)/newhybsng-com.Tpo -c -o newhybsng-com.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/com.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/com.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-com.Tpo $(DEPDIR)/newhybsng-com.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/com.c' object='newhybsng-com.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-com.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/com.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/com.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/com.c'; fi`
+
+newhybsng-ranlib.o: $(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ranlib.o -MD -MP -MF $(DEPDIR)/newhybsng-ranlib.Tpo -c -o newhybsng-ranlib.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ranlib.Tpo $(DEPDIR)/newhybsng-ranlib.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' object='newhybsng-ranlib.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ranlib.o `test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' || echo '$(srcdir)/'`$(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+
+newhybsng-ranlib.obj: $(top_srcdir)/eca-shared/ranlib/src/ranlib.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -MT newhybsng-ranlib.obj -MD -MP -MF $(DEPDIR)/newhybsng-ranlib.Tpo -c -o newhybsng-ranlib.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/newhybsng-ranlib.Tpo $(DEPDIR)/newhybsng-ranlib.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/eca-shared/ranlib/src/ranlib.c' object='newhybsng-ranlib.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newhybsng_CFLAGS) $(CFLAGS) -c -o newhybsng-ranlib.obj `if test -f '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; then $(CYGPATH_W) '$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/eca-shared/ranlib/src/ranlib.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
