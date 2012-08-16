@@ -16,8 +16,9 @@ newhybsng_CFLAGS = -I$(top_srcdir)/eca-shared/ecalibs \
 	-DCOMPILE_NEW_HYB_WITH_NO_GUI
 
 
-newhybs_LDFLAGS = $(GL_LIBS) $(GLU_LIBS) $(GLUT_LIBS)
+newhybs_LDFLAGS = $(GL_LIBS) $(GLU_LIBS) $(GLUT_LIBS) -lm
 
+newhybsng_LDFLAGS = -lm
 
 newhybs_SOURCES = $(top_srcdir)/src/GLUT_for_NewHybrids.c  \
 	$(top_srcdir)/src/DataInput.c  \

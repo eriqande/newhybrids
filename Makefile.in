@@ -78,8 +78,8 @@ am_newhybsng_OBJECTS = newhybsng-GLUT_for_NewHybrids.$(OBJEXT) \
 	newhybsng-com.$(OBJEXT) newhybsng-ranlib.$(OBJEXT)
 newhybsng_OBJECTS = $(am_newhybsng_OBJECTS)
 newhybsng_LDADD = $(LDADD)
-newhybsng_LINK = $(CCLD) $(newhybsng_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+newhybsng_LINK = $(CCLD) $(newhybsng_CFLAGS) $(CFLAGS) \
+	$(newhybsng_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -223,7 +223,8 @@ newhybsng_CFLAGS = -I$(top_srcdir)/eca-shared/ecalibs \
 	-I$(top_srcdir)/eca-shared/gfmcmc \
 	-DCOMPILE_NEW_HYB_WITH_NO_GUI
 
-newhybs_LDFLAGS = $(GL_LIBS) $(GLU_LIBS) $(GLUT_LIBS)
+newhybs_LDFLAGS = $(GL_LIBS) $(GLU_LIBS) $(GLUT_LIBS) -lm
+newhybsng_LDFLAGS = -lm
 newhybs_SOURCES = $(top_srcdir)/src/GLUT_for_NewHybrids.c  \
 	$(top_srcdir)/src/DataInput.c  \
 	$(top_srcdir)/src/DataOutput.c  \
