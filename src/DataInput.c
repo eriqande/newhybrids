@@ -69,8 +69,8 @@ cli_opts *Get_NewHybs_CLI_Opts(int argc, char *argv[])
 		graphical interface  allows the real-time observation of most of the variables involved in 
 		the Markov chain Monte Carlo \050MCMC\051 simulation. This is valuable for assessing the relia- 
 		bility of the results from the MCMC run.  In order to take full advantage of these features\054 
-		you will want to read "A Users Guide to the GLUT for Markov Chain Monte Carlo Graphical 
-		Interface" which is included in the standard distribution of the NewHybrids software as the file 
+		you will want to read "A Users Guide to the GLUT for Markov Chain Monte Carlo Graphical Interface" 
+		which is included in the standard distribution of the NewHybrids software as the file 
 		GFMCMC_UserGuide.pdf.  Disabling the GLUT interface is done with the --no-gui option.);
 
 		
