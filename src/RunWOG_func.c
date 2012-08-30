@@ -51,6 +51,9 @@ int RunWithoutGraphics(hyb_chain *C, int DoAsBurnIn, int DoAsReps)
 			OutputHistograms(C);
 			fprint_PofZ(C);
 			fprint_AlleleAverages(C);
+			fprint_PiAverages(C);
+			fprint_UniPriPofZ(C);
+			
 		}
 		
 		CurrTime = time(NULL);
@@ -103,6 +106,7 @@ int RunWithoutGraphics(hyb_chain *C, int DoAsBurnIn, int DoAsReps)
 			fprint_PofZ(C);
 			fprint_AlleleAverages(C);
 			fprint_PiAverages(C);
+			fprint_UniPriPofZ(C);
 		}
 		
 		CurrTime = time(NULL);
