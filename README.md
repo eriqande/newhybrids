@@ -49,3 +49,22 @@ newhybs --help-full
 
 newhybs --help-nroff | nroff -man | less
 ```
+
+## Getting predefined view to work
+Until  I  write  a little installer package and change a few more
+things this is how you are going  to  have  to  manually  install
+NewHybrids Predefined Views for OS X:
+
+After  cloning and building the repository you can move the file
+`NewHybrids_PreDefdViews.txt` to the directory `~/Library/gfmcmc`,  
+creating the directory if it is not already there.  In the above
+the `~` stands for your home directory.
+
+
+## Running a test data set
+To see if you have it up and running on the test data set try issuing this 
+command from the `newhybrids` directory:
+```sh
+./newhybs -d test_data/TestDat.txt
+```
+Then try hitting `1` key and then the `space-bar`.
