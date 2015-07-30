@@ -957,10 +957,12 @@ double PofY_at_a_locus(hyb_indiv *Ind,
 
 /*  updates the W's and Z's for all the individuals, and the Latent Y's */
 /*  for the AFLP loci.   */
+/* here define WAY_TOO_SMALL to the the log of 10 to the -200 */
+#define WAY_TOO_SMALL -460.517
 void UpdateWandZandY(hyb_chain *C) 
 {
 	int i,g;
-	double normo, uniprinormo;
+	double normo, uniprinormo, log_extract=-99999999999999999999.0, tmp_prob;
 	double TempCompleteDataLogLike = 0.0;  /*  prepare to accumulate a sum */
 	
 	CYCLE_i(C->Dat)
@@ -977,18 +979,31 @@ void UpdateWandZandY(hyb_chain *C)
 		uniprinormo = 0.0; 
 
 /*printf("Ind %d : ",i);*/
-		
+    
+    /*  cycle once over the genotype frequency classes to find out which is the max log-prob */
+    CYCLE_g(C->Lat)
+      if(C->Lat->Ind[i]->LogPofY[g]->v > log_extract) log_extract = C->Lat->Ind[i]->LogPofY[g]->v;
+    END1CYCLE
+  
+
 		/*  cycle over the genotype frequency classes */
 		CYCLE_g(C->Lat)
+      
+    if(C->Lat->Ind[i]->LogPofY[g]->v - log_extract < WAY_TOO_SMALL)
+      tmp_prob = 0.0;
+    else 
+      tmp_prob = exp(C->Lat->Ind[i]->LogPofY[g]->v - log_extract);
+    
+
+    
 			/*  first store them as unnormalized probabilities */
-			C->Lat->Ind[i]->PofZ[g]->v = exp(C->Lat->Ind[i]->LogPofY[g]->v) * 
-										 C->Lat->Pi[g]->v;
+			C->Lat->Ind[i]->PofZ[g]->v = tmp_prob * C->Lat->Pi[g]->v;
 
 
 /*printf(" %.4f",C->Lat->Ind[i]->LogPofY[g]->v);*/
 
 			/* store the scaled likelihoods too */				 
-			C->Lat->Ind[i]->UniPriPofZ[g]->v = exp(C->Lat->Ind[i]->LogPofY[g]->v);
+			C->Lat->Ind[i]->UniPriPofZ[g]->v = tmp_prob;
 										 
 			/*  and add that to the normalization factor */
 			normo += C->Lat->Ind[i]->PofZ[g]->v;
@@ -996,7 +1011,9 @@ void UpdateWandZandY(hyb_chain *C)
 			
 		END1CYCLE
 /*printf("\n");*/
-		
+#undef WAY_TOO_SMALL
+  
+  
 		/*  now cycle again over g and normalize PofZ */
 		CYCLE_g(C->Lat)
 			/*  divide each one by normo */
