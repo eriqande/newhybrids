@@ -1,6 +1,7 @@
 
 
-gcc src/GLUT_for_NewHybrids.c  \
+gcc -O3 -o bin/PC/newhybrids.exe \
+  src/GLUT_for_NewHybrids.c  \
 	src/DataInput.c  \
 	src/DataOutput.c  \
 	src/NewHybrids.c  \
