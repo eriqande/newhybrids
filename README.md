@@ -10,6 +10,17 @@ environment (which is really *quite* classic at this point in 2014)).
 
 I have only tested this on Macs.
 
+## Binaries
+
+In `bin/PC` you will find `newhybrids.exe` which I compiled on a virtual PC 
+(Windows 7) on my Mac, using `Compile-with-no-gui.sh`.  You can download it and then
+do:
+
+```sh
+newhybrids.exe --help-full
+```
+for a full explanation of the command line syntax.
+
 ## Building the program
 Here are the basic steps to build this on a Mac.  Note that you have to have the
 developer tools installed (install XCode for free from the app store).  From the terminal
