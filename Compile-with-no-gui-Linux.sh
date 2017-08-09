@@ -1,6 +1,6 @@
 
 
-gcc -O3 -o bin/PC/newhybrids.exe \
+gcc -O3 -o newhybrids-no-gui-linux.exe \
   src/GLUT_for_NewHybrids.c  \
 	src/DataInput.c  \
 	src/DataOutput.c  \
@@ -17,4 +17,6 @@ gcc -O3 -o bin/PC/newhybrids.exe \
 	eca-shared/src/ECA_utilities.c \
 	-I eca-shared/include \
 	-I src \
-	-DCOMPILE_NEW_HYB_WITH_NO_GUI
+	-DCOMPILE_NEW_HYB_WITH_NO_GUI \
+        -lm
+
