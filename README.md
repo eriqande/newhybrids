@@ -2,11 +2,8 @@
 # newhybrids
 
 This is the source code repository for the program *newhybrids* written by Eric C.
-Anderson.  I don't have all the documentation up here yet.  So, just find the old
-distribution at http://ib.berkeley.edu/labs/slatkin/eriq/software/software.htm and
-use stuff from there, like the test data and the PreDefined Views files, etc,
-but swap out the old executable, which is built for the Mac Classic
-environment (which is really *quite* classic at this point in 2014)).
+Anderson.  The old documentation which I have
+put into `new_hybs_doc1_1Beta3.pdf` here is mostly relevant.
 
 I have only tested this on Macs.
 
