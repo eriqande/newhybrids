@@ -18,6 +18,18 @@ newhybrids.exe --help-full
 ```
 for a full explanation of the command line syntax.
 
+In `bin/OSX` you will find Mac OSX compatible binaries,
+`newhybs` and `newhybsng`, which are the versions 
+with and without the GUI, respectively.  You can download the whole repository
+from GitHub, then if you are on the Terminal in the top level of the repository you can do
+like this:
+```sh
+./bin/OSX/newhybs --help-full
+```
+for a full listing of options.  If this seems mysterious, find a friend who knows their
+way around the Unix/Linux command line.
+
+
 ## Building the program
 Here are the basic steps to build this on a Mac.  Note that you have to have the
 developer tools installed (install XCode for free from the app store).  From the terminal
