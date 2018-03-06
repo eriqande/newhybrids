@@ -70,6 +70,16 @@ newhybs --help-full
 newhybs --help-nroff | nroff -man | less
 ```
 
+## About the version with the graphical user interface
+
+If you are using the Mac OS X version with the GUI (or you have 
+compiled it up that way on Linux), after the program launches and
+reads the data, it opens up an information window and then it waits for
+you to hit the space bar to start the program running.  At that point,
+if you have installed the `NewHybrids_PreDefdViews.txt` file as described 
+below, you should be able to hit the "1" key on your keyboard and have a bunch of
+different windows open up to watch the progression of the MCMC.
+
 ## Getting predefined view to work
 Until  I  write  a little installer package and change a few more
 things this is how you are going  to  have  to  manually  install
