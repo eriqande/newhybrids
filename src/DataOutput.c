@@ -216,7 +216,7 @@ void printPi_Trace(int Rep, hyb_chain *C, int PrintHeader)
 	int g;
 	
 	if(PrintHeader) {
-		printf("TRACE_REPORT_header:\tPi\tRep");
+		printf("PI_TRACE:Rep");
 		CYCLE_g(C->Lat) 
 		printf("\t%s",C->Dat->CategoryNames[g]);
 		END1CYCLE
@@ -225,11 +225,40 @@ void printPi_Trace(int Rep, hyb_chain *C, int PrintHeader)
 		return;
 	}
 	
-	printf("TRACE_REPORT:\tPi\t%d",Rep);
+	printf("PI_TRACE:%d",Rep);
 	CYCLE_g(C->Lat) 
 		printf("\t%f",C->Lat->Pi[g]->v);
 	END1CYCLE
 	printf("\n");
+}
+
+/* this prints the current values of pi in the chain.  If PrintHeader is 1, then it just prints a header. */
+void printZ_Trace(int Rep, hyb_chain *C, int PrintHeader)
+{
+    int i,g;
+    char tempStr[1000];
+    
+    if(PrintHeader) {
+        printf("Z_TRACE:# Categories (first is 0): ");
+        CYCLE_g(C->Lat)
+        printf("%s ",C->Dat->CategoryNames[g]);
+        END1CYCLE
+        printf("\n");
+        
+        printf("Z_TRACE:IndIdx\tIndName\tRep\tZ\n");
+        
+        return;
+    }
+    
+    CYCLE_i(C->Dat)
+    printf("Z_TRACE:");
+    if(C->Dat->IndNames == NULL || C->Dat->IndNames[i]==NULL) {
+        sprintf(tempStr,"NA");
+    } else {
+        sprintf(tempStr,"%s", C->Dat->IndNames[i]);
+    }
+    printf("%d\t%s\t%d\t%d\n", i, tempStr, Rep, C->Lat->Ind[i]->Z->v);
+    END1CYCLE
 }
 
 

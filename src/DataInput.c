@@ -88,6 +88,7 @@ cli_opts *Get_NewHybs_CLI_Opts(int argc, char *argv[])
 	temp->ThetaPriType=JEFFREYS;
 	temp->NoGui = 0;
 	temp->PiTraceReport = 0;
+    temp->ZTraceReport = 0;
 
 
 	BEGIN_OPT_LOOP
@@ -478,9 +479,10 @@ cli_opts *Get_NewHybs_CLI_Opts(int argc, char *argv[])
 						   print-traces,
 						   S J ... ,
 						   Tell program to print trace of variable type S every J sweeps,
-						   Tell program to print trace of variable type S every J sweeps.  Currently S can only be the string Pi
-						   and J tells how often to print the trace of the Pi variable.  J=1 means every sweep. J=5 means every 
-						   five sweeps.  J must be 1 or greater. Later uses of this option overwrite previously set values., 10000)) {
+						   Tell program to print trace of variable type S every J sweeps.  Currently S can only be the string Pi or Z
+						   and J tells how often to print the trace of the Z or the Pi variables.  J=1 means every sweep. J=5 means every
+						   five sweeps.  J must be 1 or greater. Later uses of this option overwrite previously set values. This dumps information to
+                           stdout tagged by things like Z_TRACE.  You can grep and cut those out., 10000)) {
 			if(ARGS_GEQ(2)) { char temps[1000];
 				GET_STR(temps);
 				if( strcmp(temps,"Pi")==0 ) {
@@ -492,10 +494,23 @@ cli_opts *Get_NewHybs_CLI_Opts(int argc, char *argv[])
 						}
 					}
 					else {
-						fprintf(stderr,"Error! Expecting a single integer argument after the \"Pi\" argument to option --print-traces.\n",temps);
+						fprintf(stderr,"Error! Expecting a single integer argument after the \"Pi\" argument to option --print-traces.\n");
 						OPT_ERROR;
 					}
 				}
+                else if( strcmp(temps,"Z")==0 ) {
+                    if(COUNT_ARGS==1) {
+                        temp->ZTraceReport = GET_INT;
+                        if(temp->ZTraceReport < 1)  {
+                            fprintf(stderr,"Error! J option after Z in --print-traces must be >=1, not %d. Exiting\n",temp->ZTraceReport);
+                            exit(1);
+                        }
+                    }
+                    else {
+                        fprintf(stderr,"Error! Expecting a single integer argument after the \"Z\" argument to option --print-traces.\n");
+                        OPT_ERROR;
+                    }
+                }
 				else {
 					fprintf(stderr,"Error! Unrecongized S argument \"%s\" to option --print-traces.  Expecting the string \"Pi\"\n",temps);
 					OPT_ERROR;
@@ -922,6 +937,7 @@ hyb_data * GetData(char *FileName)
 	
 	/* and some other defaults */
 	D->PiTraceReport = 0;
+    D->ZTraceReport = 0;
 	
 	D->M = TempM;
 	D->Kl = ivector(0,TempPolyL-1);

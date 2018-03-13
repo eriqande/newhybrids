@@ -144,6 +144,7 @@ typedef struct
 	
 	
 	int PiTraceReport;
+	int ZTraceReport;
 } hyb_data;
 
 
@@ -356,7 +357,7 @@ typedef struct
 	
 	int PiTraceReport;  /* The frequency with which the program should print out a trace of the Pi values.  0==None! and any number greater than 0 is the
 							number of sweeps between reports.  */
-	
+    int ZTraceReport;
 } cli_opts;
 
 
@@ -462,6 +463,7 @@ extern void fprint_AlleleAverages(hyb_chain *C);
 extern void fprint_PiAverages(hyb_chain *C);
 extern void fprint_UniPriPofZ(hyb_chain *C);
 extern void printPi_Trace(int Rep, hyb_chain *C, int PrintHeader);
+extern void printZ_Trace(int Rep, hyb_chain *C, int PrintHeader);
 
 /* controls whether or not the GLUT windows pop up */
 int RunWithoutGraphics(hyb_chain *C, int DoAsBurnIn, int DoAsReps);

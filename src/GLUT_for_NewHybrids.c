@@ -1615,6 +1615,7 @@ int main(int argc, char *argv[])
 		
 		/* copy across the Trace Report request to the D structure */
 		D->PiTraceReport = CL_Opts->PiTraceReport;
+        D->ZTraceReport = CL_Opts->ZTraceReport;
 		
 		
 		P = CreatePriors(D,PiP,ThP);

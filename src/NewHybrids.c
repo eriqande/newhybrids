@@ -284,9 +284,13 @@ void SingleSweep(hyb_chain *C)
 	
 	
 	/* now print the trace if requested  */
-	if(C->Dat->PiTraceReport>0 && C->Lat->Pi[0]->NumAved % C->Dat->PiTraceReport == 0) {
+	if(C->Dat->PiTraceReport > 0 && C->Lat->Pi[0]->NumAved % C->Dat->PiTraceReport == 0) {
 		printPi_Trace(C->Lat->Pi[0]->NumAved, C,0); 
 	}
+    if(C->Dat->ZTraceReport > 0 && C->Lat->Pi[0]->NumAved % C->Dat->ZTraceReport == 0) {
+        printZ_Trace(C->Lat->Pi[0]->NumAved, C,0);
+    }
+    
 	
 	
 	
@@ -661,6 +665,9 @@ void InitializeChain(hyb_chain *C)
 	if(C->Dat->PiTraceReport>0) {
 		printPi_Trace(0, C, 1);
 	}
+    if(C->Dat->ZTraceReport>0) {
+        printZ_Trace(0, C, 1);
+    }
 }
 
 
