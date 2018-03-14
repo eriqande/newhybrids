@@ -548,7 +548,7 @@ void gfnhDrawObservedData(void)
 
 
 /*  draw the W's as two rows for each individual.  Each gene copy's W fits into */
-/*  a unit square (which may get stretched) and will be color coded according to which 
+/*  a unit square (which may get stretched) and will be color coded according to which */
 /*  population it comes from.  The ones with missing data should get a little bracket */
 /*  in the  axis around them.  The Ws will be sorted so that gene copies from population 0 always
 	appear on top.  */
@@ -640,7 +640,7 @@ void gfnhDrawWs(void)
 
 
 /*  draw the W's as two rows for each individual.  Each gene copy's W fits into */
-/*  a unit square (which may get stretched) and will be color coded according to which 
+/*  a unit square (which may get stretched) and will be color coded according to which */
 /*  population it comes from.  The ones with missing data should get a little bracket */
 /*  in the  axis around them.  The Ws will be sorted so that gene copies from population 0 always
 	appear on top.  */

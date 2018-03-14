@@ -190,7 +190,7 @@ void UpdateClineVariables(hyb_chain *C, cline_struct *L)
 			END1CYCLE
 		}
 	}
-/* */
+*/
 
 
 	/* cool, now we are ready to do the updates for alpha and beta at each locus, so we cycle over loci and do it */
@@ -245,7 +245,7 @@ for(d=0;d<=L->MaxLocaleIndex;d++) {
 					L->Locs[l]->N[d]->v,(double)L->Locs[l]->Y[d]->v/(double)L->Locs[l]->N[d]->v,L->x[d]);
 	}
 }
-/*  */ 
+*/ 
 
 }
 
