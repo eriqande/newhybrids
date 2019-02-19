@@ -55,6 +55,22 @@ make
 sudo make install 
 ```
 
+## Build it without autotools/make etc
+
+The automake chain is something of a mystery to me, and that is only there for getting
+the GUI to work.  If you are using it on a cluster, you won't want that anyway.  In that
+case, just compile it with the simple script `Compile-with-no-gui-Linux.sh`.  For example,
+from within the `newhybrids` directory, do this:
+```sh
+ ./Compile-with-no-gui-Linux.sh
+```
+That makes an executable called `newhybrids-no-gui-linux.exe`.  You can get the help for
+it by doing this:
+```sh
+./newhybrids-no-gui-linux.exe --help
+```
+
+
 ## Command line interface
 Newhybrids has a nicer command line interface now than it did before.  To read about the 
 available options you can do:
